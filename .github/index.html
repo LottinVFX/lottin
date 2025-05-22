@@ -1,0 +1,95 @@
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Antes e Depois</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      overflow: hidden;
+    }
+    .container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+    .after {
+      clip-path: inset(0 50% 0 0);
+      will-change: clip-path;
+    }
+    .slider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: white;
+      cursor: ew-resize;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="slider-container">
+    <img src="https://i.postimg.cc/JzStbbq5/depois.webp" class="before">
+    <img src="https://i.postimg.cc/K81Rk9nY/antes.webp" class="after" id="after-img">
+    <div class="slider" id="slider">
+      <div class="handle"></div>
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById('slider-container');
+    const after = document.getElementById('after-img');
+    const slider = document.getElementById('slider');
+
+    let mouseX = null;
+    let animating = false;
+
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(updateSlider);
+      }
+    });
+
+    function updateSlider() {
+      if (mouseX !== null) {
+        const rect = container.getBoundingClientRect();
+        const percent = (mouseX / rect.width) * 100;
+
+        after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+        slider.style.left = `${percent}%`;
+      }
+      animating = false;
+    }
+  </script>
+</body>
+</html>
